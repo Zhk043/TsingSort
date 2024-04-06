@@ -1,0 +1,49 @@
+﻿{
+    "Parameter": [
+        {
+            "Id": "0x00000168",
+            "Name": "类别序号",
+            "NameCn": "类别序号",
+            "NameEn": "labelId",
+            "DefaultValue": 0,
+            "MaxValue": 50,
+            "MinValue": 0
+        },
+        {
+            "Id": "0x0000012C",
+            "Name": "长宽比",
+            "NameCn": "长宽比",
+            "NameEn": "LengthWidthRatio",
+            "DefaultValue": 10,
+            "MaxValue": 100,
+            "MinValue": 0
+        },
+        {
+            "Id": "0x0000014A",
+            "Name": "过滤大小",
+            "NameCn": "过滤大小",
+            "NameEn": "FilterArea",
+            "DefaultValue": 400,
+            "MaxValue": 10000,
+            "MinValue": 0
+        },
+        {
+            "Id": "0x00000153",
+            "Name": "上下截断值",
+            "NameCn": "上下截断值",
+            "NameEn": "CutOff",
+            "DefaultValue": 0,
+            "MaxValue": 20,
+            "MinValue": 0
+        },
+        {
+            "Id": "0x00000154",
+            "Name": "高度下限",
+            "NameCn": "高度下限",
+            "NameEn": "LowerLimitHeight",
+            "DefaultValue": 10,
+            "MaxValue": 400,
+            "MinValue": 10
+        }
+    ]
+}

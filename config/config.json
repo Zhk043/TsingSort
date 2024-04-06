@@ -1,0 +1,21 @@
+﻿{
+    "Valve": {
+        "Num": 63,
+        "LeftIgnore": 8,
+        "RightIgnore": 8,
+        "Interval": 16
+    },
+    "Network": {
+        "ScreenPort": 2001,
+        "ScreenLocalPort": 1998,
+        "FPGARemoteAddress": "192.168.100.100",
+        "FPGAPort": 2001,
+        "FPGALocalPort": 1999,
+        "FPGAAddress": [
+            "192.168.100.100"
+        ],
+        "FPGALocalAddress": [
+            "192.168.100.10"
+        ]
+    }
+}

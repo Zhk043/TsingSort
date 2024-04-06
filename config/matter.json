@@ -1,0 +1,34 @@
+﻿{
+    "System": {
+        "ForceSynchRowId": 4,
+        "FPGANum": 1,
+        "BatchNum": 1,
+        "OnePassNFPGA":1,
+        "OneThreadNReceive": 1,
+        "OnePacketNRows": 2,
+        "OneValveNum": 1,
+        "ValveBlowLineNum": 128,
+        "AnchorSize": 3,
+        "BackgroundColor": {
+            "r": 60,
+            "g": 85,
+            "b": 230
+        }
+    },
+    "Model": [
+        {
+            "UId": "0",
+            "Name": "pistachio",
+            "NameCn": "开心果",
+            "NameEn": "pistachio",
+            "ImageRows": 192,
+            "ImageCols": 1024,
+            "OverlayLineNum": 64,
+            "Version": "1.0.0.0",
+            "Path": "models/kaixinguo_1921024_sig_quantize_r",
+            "Classes": ["black","impurity","close","kernel","open","shell"],
+            "ClassesCn": ["黑","杂质","闭口","核","开口","壳"],
+            "ClassesEn": ["black","impurity","close","kernel","open","shell"]
+        }
+    ]
+}

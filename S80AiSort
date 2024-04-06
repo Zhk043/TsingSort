@@ -1,0 +1,38 @@
+#!/bin/sh
+#
+# Starts AiSort.
+#
+
+start() {
+	printf "Starting AiSort: "
+	umask 077
+	start-stop-daemon -S -q -p /var/run/AiSort.pid --exec sh /root/work/AiSort/autostart.sh &
+	echo "OK"
+}
+stop() {
+	printf "Stopping AiSort: "
+	start-stop-daemon -K -q -p /var/run/AiSort.pid
+	echo "OK"
+}
+restart() {
+	stop
+	start
+}
+
+case "$1" in
+  start)
+	start
+	;;
+  stop)
+	stop
+	;;
+  restart|reload)
+	restart
+	;;
+  *)
+	echo "Usage: $0 {start|stop|restart}"
+	exit 1
+esac
+
+exit $?
+
