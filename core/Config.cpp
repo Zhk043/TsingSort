@@ -1,3 +1,4 @@
+//配置文件，用json
 #include "Config.h"
 #include <sys/types.h>
 #include <sys/stat.h>

@@ -1,3 +1,4 @@
+//喷阀自检
 #include "ValveTest.h"
 
 void ValveTest::Start(int valveNum_, int valveLeftIgnore_, int valveInterval_)

@@ -1,3 +1,4 @@
+//日志管理
 #include "LogManager.h"
 #include <iostream>
 #include <fstream>

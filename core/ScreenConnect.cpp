@@ -1,3 +1,4 @@
+//屏的交互，socket方法
 #include "ScreenConnect.h"
 #include "Config.h"
 #include "LogManager.h"
@@ -414,12 +415,12 @@ ScreenConnect::ScreenConnect(int devId_, int currFpgaIp_)
     screenAddr.sin_port = htons(Config::GetInstance()->fgpaPort);
 }
 
-int ScreenConnect::ReceiveCommand(unsigned char *buf, int size)
+int ScreenConnect::ReceiveCommand(unsigned char *buf, int size) //接受屏幕交互信息
 {
     return recvfrom(screenSocket, buf, size, 0, NULL, NULL);
 }
 
-int ScreenConnect::SendCommand(unsigned char *buf, int len)
+int ScreenConnect::SendCommand(unsigned char *buf, int len)//回复屏幕
 {
     int n = sendto(screenSocket, buf, len, 0, (sockaddr *)(&screenAddr), sizeof(screenAddr));
 

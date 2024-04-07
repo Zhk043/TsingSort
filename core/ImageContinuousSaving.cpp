@@ -1,3 +1,4 @@
+//屏端的连续采图
 #include "ImageContinuousSaving.h"
 
 void ImageContinuousSaving::Start(uint32_t type_, int imgRows_, int imgCols_, int overlayLineNum_)

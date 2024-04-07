@@ -1,3 +1,4 @@
+//检测
 #include "DetectProcess.h"
 #include "SynchProcess.h"
 #include "FPGAProcess.h"
@@ -58,39 +59,39 @@ DetectProcess::~DetectProcess()
 {
 }
 
-void DetectProcess::DetectImage()
+void DetectProcess::DetectImage()//开始处理
 {
     std::cout << "current Model: " << currModel.path << std::endl;
     CLogInfo("current Model: " + currModel.path + ", currModel.category.num: " + to_string(currModel.category.num));
     std::string cfg = currModel.path + ".cfg";
     std::string weight = currModel.path + ".weight";
-    knight->bAiInit(cfg.c_str(), weight.c_str(), currModel.category.num);
+    knight->bAiInit(cfg.c_str(), weight.c_str(), currModel.category.num);//调用ai模型，方法为清微提供
     while (true)
     {
         auto startTime = std::chrono::high_resolution_clock::now();
         float recvImgInterval = 0.0;
-        cv::Mat src = synchProcess->GetImageData(startTime, recvImgInterval);
+        cv::Mat src = synchProcess->GetImageData(startTime, recvImgInterval);//获得一张图片
 #ifdef OPEN_LOG
         auto copyTime = std::chrono::high_resolution_clock::now();
         float copyInterval = std::chrono::duration_cast<std::chrono::microseconds>(copyTime - startTime).count() / 1000.0;
 #endif
         switch (processType.load(std::memory_order_acquire))
         {
-        case ProcessType::Normal:
+        case ProcessType::Normal:  //正常选调
         {
             DETECT_RESULT_S g_result;
 #ifdef OPEN_LOG
             auto startDetectTime = std::chrono::high_resolution_clock::now();
             float detectInterval = 0.0;
 #endif
-            knight->bAiInference(src, &g_result);
+            knight->bAiInference(src, &g_result); //推理
 #ifdef OPEN_LOG
             auto endDetectTime = std::chrono::high_resolution_clock::now();
             detectInterval = std::chrono::duration_cast<std::chrono::microseconds>(endDetectTime - startDetectTime).count() / 1000.0;
 #endif
-            if (g_result.u32BoxNum == 0)
+            if (g_result.u32BoxNum == 0)  //判断是否有物料
                 continue;
-            DealDetectResult(src, g_result);
+            DealDetectResult(src, g_result);  //处理结果
 #ifdef OPEN_LOG
             auto endTime = std::chrono::high_resolution_clock::now();
             float interval = std::chrono::duration_cast<std::chrono::microseconds>(endTime - startTime).count() / 1000.0;
@@ -103,7 +104,7 @@ void DetectProcess::DetectImage()
 #endif
         }
         break;
-        case ProcessType::SaveImg:
+        case ProcessType::SaveImg: //批量采图
         {
             DETECT_RESULT_S g_result;
             knight->bAiInference(src, &g_result);
@@ -115,7 +116,7 @@ void DetectProcess::DetectImage()
             imgBatchSaving.SaveImg(src, g_result, currModel.category.names);
         }
         break;
-        case ProcessType::SaveContinusImg:
+        case ProcessType::SaveContinusImg: //连续采图
         {
             if (imgContiSaving.GetType() == 0)
             {
@@ -130,10 +131,10 @@ void DetectProcess::DetectImage()
             }
         }
         break;
-        case ProcessType::TestValve:
+        case ProcessType::TestValve: //喷阀测试
             ProcessValveTest(src);
             break;
-        case ProcessType::ChangeModel:
+        case ProcessType::ChangeModel:// 模式切换
             isReadyChangeModel.store(true, std::memory_order_release);
             break;
         default:
@@ -145,7 +146,7 @@ void DetectProcess::DetectImage()
 void DetectProcess::DealDetectResult(cv::Mat &src, DETECT_RESULT_S &result)
 {
     std::vector<BOX_S> blowObjects; // 所有待吹目标
-    for (size_t i = 0; i < result.u32BoxNum; ++i)
+    for (size_t i = 0; i < result.u32BoxNum; ++i)  //循环图像上所有目标
     {
         passProcess->DealObjRectByPercent(result.stBox[i]);
         passProcess->DealDetectObj(src, result.stBox[i], blowObjects, currModel.category.num);
@@ -157,7 +158,7 @@ void DetectProcess::DealDetectResult(cv::Mat &src, DETECT_RESULT_S &result)
     }
 }
 
-void DetectProcess::CreateValveData(const std::vector<BOX_S> &objs, const cv::Mat &src, u8 isTest)
+void DetectProcess::CreateValveData(const std::vector<BOX_S> &objs, const cv::Mat &src, u8 isTest)  //创建阀数据
 {
     memoryPool->ClearValveBuf();
     for (BOX_S obj : objs)
@@ -169,7 +170,7 @@ void DetectProcess::CreateValveData(const std::vector<BOX_S> &objs, const cv::Ma
                 if (valvePixelPositions[i].second >= obj.f32Xmin &&
                     valvePixelPositions[i].first <= obj.f32Xmax)
                 {
-                    memoryPool->SetValveData(line, i);
+                    memoryPool->SetValveData(line, i);  //创建发数据，放入内存池
                 }
             }
         }

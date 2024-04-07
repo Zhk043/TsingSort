@@ -1,3 +1,4 @@
+//同步
 #include "SynchProcess.h"
 #include "MemoryPool.h"
 
@@ -18,7 +19,7 @@ SynchProcess::~SynchProcess()
 void SynchProcess::SynchReceiveImage(int fpgaImgDataIndex)
 {
     imgDataIndex = fpgaImgDataIndex;
-    dataCond.notify_one();
+    dataCond.notify_one();//收到fpga线程通知，停止阻塞，开始处理，继续接受
 }
 
 void SynchProcess::SynchTime(int fpgaImgDataIndex, std::chrono::time_point<std::chrono::high_resolution_clock> startTime)

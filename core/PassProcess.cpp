@@ -1,3 +1,4 @@
+//通道配置
 #include "PassProcess.h"
 #include "Config.h"
 #include <string>
@@ -122,7 +123,7 @@ void PassProcess::SetLowerLimitHeight(u32 value)
     lowerLimitHeight = value;
 }
 
-void PassProcess::DealObjRectByPercent(BOX_S &obj)
+void PassProcess::DealObjRectByPercent(BOX_S &obj) //判断哪些目标可以吹，
 {
     // 上下左右按比例缩放
     int halfHeight = (obj.f32Ymax - obj.f32Ymin) / 2;
@@ -134,7 +135,7 @@ void PassProcess::DealObjRectByPercent(BOX_S &obj)
     obj.f32Xmin = obj.f32Xmin + halfWidth * globalImgCutTmp[2] / 100;
 }
 
-void PassProcess::DealDetectObj(cv::Mat &src, const BOX_S &obj, std::vector<BOX_S> &objs, int labelNum)
+void PassProcess::DealDetectObj(cv::Mat &src, const BOX_S &obj, std::vector<BOX_S> &objs, int labelNum) //执行度过滤
 {
     if (!isEnable)
         return; // 该通道算法使能没有打开

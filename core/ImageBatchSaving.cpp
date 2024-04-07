@@ -1,3 +1,4 @@
+//批量采图
 #include "ImageBatchSaving.h"
 
 std::string ImageBatchSaving::GetCurrentTimeString()

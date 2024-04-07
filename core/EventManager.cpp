@@ -1,3 +1,4 @@
+//事件管理器
 #include "EventManager.h"
 #include <thread>
 #include <fstream>

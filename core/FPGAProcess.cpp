@@ -71,10 +71,10 @@ bool FPGAProcess::ReceiveCamera()
     int overlayLineNum = memoryPool->GetOverlayLineNum();
     int onePacketNRows = Config::GetInstance()->onePacketNRows;
     int recvRowTmp = recvRows + overlayLineNum;
-    u8 *buf = memoryPool->GetReceiveImageBuf(0, recvRowTmp, imgDataIndex);
+    u8 *buf = memoryPool->GetReceiveImageBuf(0, recvRowTmp, imgDataIndex);//获取内存位置
     u16 rowId;
-    int ret = recvfrom(fpgaSocket, buf, imgCols * 3 * onePacketNRows, 0, nullptr, nullptr);
-    if (ret > 0)
+    int ret = recvfrom(fpgaSocket, buf, imgCols * 3 * onePacketNRows, 0, nullptr, nullptr);//接收相机数据
+    if (ret > 0)//判断行号连续性
     {
         rowId = buf[3];
         rowId <<= 8;
@@ -96,32 +96,32 @@ bool FPGAProcess::ReceiveCamera()
         perror("fpgaProcess receive error");
         return false;
     }
-    if (recvRowTmp == overlayLineNum)
+    if (recvRowTmp == overlayLineNum)//判断叠行
     {
         startTime = std::chrono::high_resolution_clock::now();
     }
-    if (recvRowTmp >= imgRows - overlayLineNum)
+    if (recvRowTmp >= imgRows - overlayLineNum)//如果有叠行，复制叠行头
     {
         int overlayLineIndex = recvRowTmp + overlayLineNum - imgRows;
         u8 *destBuf = memoryPool->GetOverlayImageBuf(0, overlayLineIndex, imgDataIndex);
         memcpy(destBuf, buf, imgCols * 3 * onePacketNRows);
     }
 
-    recvRows = (recvRowTmp - overlayLineNum + onePacketNRows) % (imgRows - overlayLineNum);
+    recvRows = (recvRowTmp - overlayLineNum + onePacketNRows) % (imgRows - overlayLineNum);//生产者
     if (recvRows == 0)
     {
 #ifdef OPEN_LOG
         synchProcess->SynchTime(imgDataIndex, startTime);
 #endif
         imgDataIndex = (imgDataIndex + 1) % CacheImgSize;
-        synchProcess->SynchReceiveImage(imgDataIndex);
+        synchProcess->SynchReceiveImage(imgDataIndex);//同步，通知消费线程
     }
     return true;
 }
 
 const unsigned char command_pre[] = {0x00, 0x02, 0x00, 0x00, 0xb0, 0x00, 0x04, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 
-void FPGAProcess::SendValveData(u8 *linescommand, u16 rowid, u16 overlayRowId, u8 isTest)
+void FPGAProcess::SendValveData(u8 *linescommand, u16 rowid, u16 overlayRowId, u8 isTest)  //发送阀数据
 {
     int imgRows = memoryPool->GetImgRows();
     // int blowDataRowNum = Config::GetInstance()->valveBlowLineNum;
@@ -199,7 +199,7 @@ void FPGAProcess::SendValveData(u8 *linescommand, u16 rowid, u16 overlayRowId, u
         // }
         // std::cout << data << std::endl;
 
-        int n = sendto(fpgaSocket, commandChar, blowDataRowNum * valveNeedByteNum + NET_HEADER + 4, 0, (sockaddr *)(&fpgaAddr), sizeof(fpgaAddr));
+        int n = sendto(fpgaSocket, commandChar, blowDataRowNum * valveNeedByteNum + NET_HEADER + 4, 0, (sockaddr *)(&fpgaAddr), sizeof(fpgaAddr));  //udp方式发送
         if (n < 0)
         {
             perror("valve data send error");

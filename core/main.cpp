@@ -19,13 +19,13 @@
 
 using namespace std;
 
-std::shared_ptr<FPGAProcess> fpgaProcess;
-std::shared_ptr<SynchProcess> synchProcess;
-std::shared_ptr<DetectProcess> detectProcess;
-std::shared_ptr<PassProcess> passProcess;
-std::shared_ptr<MemoryPool> memoryPool;
-std::shared_ptr<KNIGHT> knight;
-std::shared_ptr<ScreenConnect> screenConnect;
+std::shared_ptr<FPGAProcess> fpgaProcess;//相机板
+std::shared_ptr<SynchProcess> synchProcess;//同步
+std::shared_ptr<DetectProcess> detectProcess;//检测进程，处理图像，发送数据
+std::shared_ptr<PassProcess> passProcess;//通道进程，界面设置参数
+std::shared_ptr<MemoryPool> memoryPool;//内存池，模型切换
+std::shared_ptr<KNIGHT> knight;//清微算法库
+std::shared_ptr<ScreenConnect> screenConnect;//屏幕的接口
 
 void DealCrash(int num)
 {
@@ -69,6 +69,7 @@ int main(int argc, char *argv[])
 	int currFpgaIp = ip_num[3];
 	// ipMapFpgaIds[currFpgaIp] = devId;
 
+	//实例化对象
 	Model firstModel = config->models.begin()->second;
 	int imgRows = firstModel.imgRows;
 	int imgCols = firstModel.imgCols;
@@ -104,7 +105,7 @@ int main(int argc, char *argv[])
 	detectTh.detach();
 
 	sleep(1);
-	std::thread receiveTh(&FPGAProcess::ReceiveImage, fpgaProcess);
+	std::thread receiveTh(&FPGAProcess::ReceiveImage, fpgaProcess);//创建接收图像的线程
 	receiveTh.detach();
 
 	// ping相机板
